@@ -94,3 +94,5 @@ Replace all insertions and deletions of requests and current riders with API cal
 I've setup server.js using npm install express cors 
 npm start          # Terminal 1 - Backend (port 3000)
 python3 -m http.server 8000  # Terminal 2 - Frontend (port 8000)
+
+<img width="2491" height="1564" alt="image" src="https://github.com/user-attachments/assets/bfaa834e-34f9-4848-9ac9-c11b3fa2bc08" />
