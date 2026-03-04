@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Challenge - Visualization</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="control-panel">
+            <h1>Elevator Simulator</h1>
+            <div class="request-form">
+                <label for="personName">Person Name:</label>
+                <input type="text" id="personName" placeholder="Enter name">
+                
+                <label for="currentFloor">Current Floor:</label>
+                <select id="currentFloor">
+                    <option value="0">0 (Lobby)</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+                
+                <label for="dropOffFloor">Drop-off Floor:</label>
+                <select id="dropOffFloor">
+                    <option value="0">0 (Lobby)</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+                
+                <button id="addPersonBtn">Add Person to Queue</button>
+                <button id="dispatchBtn">Dispatch Elevator</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-label">Stops:</span>
+                    <span class="stat-value" id="stopsCount">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Floors Traversed:</span>
+                    <span class="stat-value" id="floorsCount">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Current Floor:</span>
+                    <span class="stat-value" id="currentFloorDisplay">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Time:</span>
+                    <span class="stat-value" id="timeDisplay">12:00 AM</span>
+                </div>
+            </div>
+
+            <div class="queues">
+                <div class="queue-section">
+                    <h3>Requests Queue</h3>
+                    <div id="requestsList" class="queue-list"></div>
+                </div>
+                <div class="queue-section">
+                    <h3>Current Riders</h3>
+                    <div id="ridersList" class="queue-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="elevator-shaft">
+            <div class="floors-container">
+                <div id="floorsDisplay"></div>
+            </div>
+            <div id="elevator" class="elevator">
+                <div class="elevator-door left-door"></div>
+                <div class="elevator-door right-door"></div>
+                <div class="elevator-interior">
+                    <div id="ridersInElevator" class="riders-inside"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="visualization.js"></script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Control Panel */
+.control-panel {
+    flex: 0 0 350px;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.control-panel h1 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+    text-align: center;
+}
+
+.request-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.request-form label {
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+}
+
+.request-form input,
+.request-form select {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.request-form input:focus,
+.request-form select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.request-form button {
+    padding: 12px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+#addPersonBtn {
+    background: #667eea;
+    color: white;
+}
+
+#addPersonBtn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+#dispatchBtn {
+    background: #48bb78;
+    color: white;
+}
+
+#dispatchBtn:hover {
+    background: #38a169;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+}
+
+#resetBtn {
+    background: #ed8936;
+    color: white;
+}
+
+#resetBtn:hover {
+    background: #dd6b20;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(237, 137, 54, 0.4);
+}
+
+/* Stats */
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f7fafc;
+    border-radius: 8px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+/* Queues */
+.queues {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.queue-section h3 {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.queue-list {
+    background: #f7fafc;
+    border-radius: 8px;
+    padding: 12px;
+    min-height: 80px;
+    border: 2px solid #e2e8f0;
+}
+
+.queue-item {
+    background: white;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border-left: 4px solid #667eea;
+    font-size: 14px;
+    color: #333;
+}
+
+.queue-item:last-child {
+    margin-bottom: 0;
+}
+
+.queue-item-name {
+    font-weight: 600;
+}
+
+.queue-item-floors {
+    font-size: 12px;
+    color: #718096;
+    margin-top: 4px;
+}
+
+/* Elevator Shaft */
+.elevator-shaft {
+    flex: 1;
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+}
+
+.floors-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0;
+    position: relative;
+    min-height: 600px;
+}
+
+.floor {
+    flex: 1;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    min-height: 50px;
+}
+
+.floor:first-child {
+    border-bottom: none;
+}
+
+.floor-label {
+    font-weight: 700;
+    color: #667eea;
+    font-size: 16px;
+    min-width: 50px;
+}
+
+.floor-people {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    margin-left: 20px;
+}
+
+.person-badge {
+    background: #bee3f8;
+    color: #2c5282;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Elevator */
+#elevator {
+    position: absolute;
+    right: 30px;
+    width: 80px;
+    background: #f0f0f0;
+    border: 3px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: bottom 0.5s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+.elevator-interior {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.elevator-door {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 12px;
+    background: #d3d3d3;
+    border: 2px solid #999;
+    z-index: 5;
+}
+
+.elevator-door.left-door {
+    left: 0;
+    border-right: none;
+}
+
+.elevator-door.right-door {
+    right: 0;
+    border-left: none;
+}
+
+.door.open .left-door {
+    animation: doorOpen 0.4s ease-out;
+}
+
+.door.open .right-door {
+    animation: doorOpen 0.4s ease-out;
+}
+
+@keyframes doorOpen {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0.3;
+        transform: translateX(-10px);
+    }
+}
+
+.riders-inside {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.rider-in-elevator {
+    background: #f687b3;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .control-panel {
+        flex: none;
+    }
+
+    .elevator-shaft {
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 600px) {
+    .control-panel {
+        padding: 20px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    #elevator {
+        width: 60px;
+        right: 15px;
+    }
+
+    .control-panel h1 {
+        font-size: 22px;
+    }
+}

@@ -85,6 +85,12 @@ Can you create a more efficient algorithm for pickups and drop offs? Whatever al
 
 Create a DOM representation of the elevator and people to visualize the elevator process.
 
+To render this level i've use python3 -m http.server 8000 to run this on localhost
+
 ### Level 9
 
 Replace all insertions and deletions of requests and current riders with API calls to a Node/Express backend with the correct CRUD methods.
+
+I've setup server.js using npm install express cors 
+npm start          # Terminal 1 - Backend (port 3000)
+python3 -m http.server 8000  # Terminal 2 - Frontend (port 8000)

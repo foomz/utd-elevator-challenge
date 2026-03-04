@@ -1,0 +1,212 @@
+import Elevator from './elevator.js';
+import Person from './person.js';
+
+class ElevatorVisualizer {
+    constructor() {
+        this.elevator = new Elevator();
+        this.maxFloor = 10;
+        this.isDispatching = false;
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.renderFloors();
+        this.updateDisplay();
+        this.updateTime();
+        setInterval(() => this.updateTime(), 1000);
+    }
+
+    setupEventListeners() {
+        document.getElementById('addPersonBtn').addEventListener('click', () => this.addPerson());
+        document.getElementById('dispatchBtn').addEventListener('click', () => this.dispatchElevator());
+        document.getElementById('resetBtn').addEventListener('click', () => this.resetSimulation());
+    }
+
+    renderFloors() {
+        const floorsDisplay = document.getElementById('floorsDisplay');
+        floorsDisplay.innerHTML = '';
+        
+        for (let floor = this.maxFloor; floor >= 0; floor--) {
+            const floorDiv = document.createElement('div');
+            floorDiv.className = 'floor';
+            floorDiv.id = `floor-${floor}`;
+            floorDiv.innerHTML = `
+                <div class="floor-label">Floor ${floor}</div>
+                <div class="floor-people" id="floor-people-${floor}"></div>
+            `;
+            floorsDisplay.appendChild(floorDiv);
+        }
+        
+        this.updateElevatorHeight();
+    }
+
+    addPerson() {
+        const nameInput = document.getElementById('personName');
+        const currentFloorSelect = document.getElementById('currentFloor');
+        const dropOffFloorSelect = document.getElementById('dropOffFloor');
+
+        const name = nameInput.value.trim();
+        const currentFloor = parseInt(currentFloorSelect.value);
+        const dropOffFloor = parseInt(dropOffFloorSelect.value);
+
+        if (!name) {
+            alert('Please enter a person\'s name');
+            return;
+        }
+
+        if (currentFloor === dropOffFloor) {
+            alert('Current floor must be different from drop-off floor');
+            return;
+        }
+
+        const person = new Person(name, currentFloor, dropOffFloor);
+        this.elevator.requests.push(person);
+
+        nameInput.value = '';
+        currentFloorSelect.value = '0';
+        dropOffFloorSelect.value = '0';
+
+        this.updateDisplay();
+    }
+
+    dispatchElevator() {
+        if (this.isDispatching) return;
+        
+        if (this.elevator.requests.length === 0 && this.elevator.riders.length === 0) {
+            alert('No requests or riders');
+            return;
+        }
+
+        this.isDispatching = true;
+        document.getElementById('dispatchBtn').disabled = true;
+
+        // Execute dispatch with animation
+        this.animateDispatch();
+    }
+
+    async animateDispatch() {
+        // Override the movement methods to add animation
+        const originalMoveUp = this.elevator.moveUp.bind(this.elevator);
+        const originalMoveDown = this.elevator.moveDown.bind(this.elevator);
+
+        this.elevator.moveUp = () => {
+            originalMoveUp();
+            this.updateElevatorHeight();
+        };
+
+        this.elevator.moveDown = () => {
+            originalMoveDown();
+            this.updateElevatorHeight();
+        };
+
+        // Execute dispatch
+        this.elevator.dispatch();
+
+        // Restore original methods
+        this.elevator.moveUp = originalMoveUp;
+        this.elevator.moveDown = originalMoveDown;
+
+        this.updateDisplay();
+        this.isDispatching = false;
+        document.getElementById('dispatchBtn').disabled = false;
+    }
+
+    updateElevatorHeight() {
+        const elevator = document.getElementById('elevator');
+        const floorHeight = 100 / (this.maxFloor + 1); // percentage per floor
+        const bottomPosition = this.elevator.currentFloor * floorHeight;
+        elevator.style.bottom = `${bottomPosition}%`;
+    }
+
+    updateDisplay() {
+        // Update stats
+        document.getElementById('stopsCount').textContent = this.elevator.stops;
+        document.getElementById('floorsCount').textContent = this.elevator.floorsTraversed;
+        document.getElementById('currentFloorDisplay').textContent = this.elevator.currentFloor;
+
+        // Update requests list
+        const requestsList = document.getElementById('requestsList');
+        requestsList.innerHTML = '';
+        if (this.elevator.requests.length === 0) {
+            requestsList.innerHTML = '<div style="color: #a0aec0; font-size: 14px;">No pending requests</div>';
+        } else {
+            this.elevator.requests.forEach(person => {
+                const item = document.createElement('div');
+                item.className = 'queue-item';
+                item.innerHTML = `
+                    <div class="queue-item-name">${person.name}</div>
+                    <div class="queue-item-floors">Floor ${person.currentFloor} → Floor ${person.dropOffFloor}</div>
+                `;
+                requestsList.appendChild(item);
+            });
+        }
+
+        // Update riders list
+        const ridersList = document.getElementById('ridersList');
+        ridersList.innerHTML = '';
+        if (this.elevator.riders.length === 0) {
+            ridersList.innerHTML = '<div style="color: #a0aec0; font-size: 14px;">No current riders</div>';
+        } else {
+            this.elevator.riders.forEach(person => {
+                const item = document.createElement('div');
+                item.className = 'queue-item';
+                item.innerHTML = `
+                    <div class="queue-item-name">${person.name}</div>
+                    <div class="queue-item-floors">→ Floor ${person.dropOffFloor}</div>
+                `;
+                ridersList.appendChild(item);
+            });
+        }
+
+        // Update people badges on floors
+        for (let floor = 0; floor <= this.maxFloor; floor++) {
+            const floorPeople = document.getElementById(`floor-people-${floor}`);
+            floorPeople.innerHTML = '';
+
+            // Add people waiting on this floor
+            this.elevator.requests.forEach(person => {
+                if (person.currentFloor === floor) {
+                    const badge = document.createElement('div');
+                    badge.className = 'person-badge';
+                    badge.textContent = `📍 ${person.name}`;
+                    floorPeople.appendChild(badge);
+                }
+            });
+        }
+
+        // Update riders in elevator
+        const ridersInElevator = document.getElementById('ridersInElevator');
+        ridersInElevator.innerHTML = '';
+        this.elevator.riders.forEach(person => {
+            const rider = document.createElement('div');
+            rider.className = 'rider-in-elevator';
+            rider.textContent = `${person.name} → ${person.dropOffFloor}`;
+            ridersInElevator.appendChild(rider);
+        });
+    }
+
+    resetSimulation() {
+        this.elevator.reset();
+        this.elevator.requests = [];
+        this.isDispatching = false;
+        document.getElementById('dispatchBtn').disabled = false;
+        this.updateDisplay();
+        this.updateElevatorHeight();
+    }
+
+    updateTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours % 12 || 12;
+        const timeString = `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        document.getElementById('timeDisplay').textContent = timeString;
+    }
+}
+
+// Initialize visualizer when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    new ElevatorVisualizer();
+});

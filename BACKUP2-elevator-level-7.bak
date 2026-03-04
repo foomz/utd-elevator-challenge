@@ -8,47 +8,30 @@ export default class Elevator {
   }
 
   dispatch(){
-    // SCAN algorithm: sweep up and down minimizing backtracking
     while(this.requests.length > 0 || this.riders.length > 0) {
-      // Get all pending destinations
-      let pickupFloors = this.requests.map(r => r.currentFloor);
-      let dropoffFloors = this.riders.map(r => r.dropOffFloor);
-      let allFloors = [...pickupFloors, ...dropoffFloors];
-      
-      if(allFloors.length === 0) break;
-      
-      // Find min and max floors to visit
-      let minFloor = Math.min(...allFloors);
-      let maxFloor = Math.max(...allFloors);
-      
-      // Determine sweep direction: go to furthest first
-      if(this.currentFloor <= minFloor) {
-        // Go up to max, handling stops on the way
-        while(this.currentFloor < maxFloor) {
+      let nextDestination = null;
+
+      // Determine next destination - prioritize pickups
+      if(this.requests.length > 0) {
+        nextDestination = this.requests[0].currentFloor;
+      } else if(this.riders.length > 0) {
+        nextDestination = this.riders[0].dropOffFloor;
+      }
+
+      if(nextDestination === null) break;
+
+      // Move to next destination
+      while(this.currentFloor !== nextDestination) {
+        if(this.currentFloor < nextDestination) {
           this.moveUp();
-          this.hasPickup();
-          this.hasDropoff();
-        }
-        // Then sweep down
-        while(this.currentFloor > minFloor && (this.requests.length > 0 || this.riders.length > 0)) {
+        } else {
           this.moveDown();
-          this.hasPickup();
-          this.hasDropoff();
-        }
-      } else {
-        // Go down to min, handling stops on the way
-        while(this.currentFloor > minFloor) {
-          this.moveDown();
-          this.hasPickup();
-          this.hasDropoff();
-        }
-        // Then sweep up
-        while(this.currentFloor < maxFloor && (this.requests.length > 0 || this.riders.length > 0)) {
-          this.moveUp();
-          this.hasPickup();
-          this.hasDropoff();
         }
       }
+
+      // Handle pickups and dropoffs at current floor
+      this.hasPickup();
+      this.hasDropoff();
     }
 
     // Return to lobby if conditions met
